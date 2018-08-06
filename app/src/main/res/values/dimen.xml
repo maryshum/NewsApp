@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_margin_top">10dp</dimen>
+    <dimen name="layout_margin_left">10dp</dimen>
+    <dimen name="layout_margin_right">10dp</dimen>
+    <dimen name="section_margin_right">10dp</dimen>
+    <dimen name="title_margin_left">10dp</dimen>
+    <dimen name="title_magin_bottom">5dp</dimen>
+    <dimen name="author_margin_left">10dp</dimen>
+    <dimen name="date_margin_left">10dp</dimen>
+    <dimen name="date_margin_top">5dp</dimen>
+</resources>
