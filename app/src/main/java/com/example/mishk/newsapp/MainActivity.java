@@ -4,11 +4,16 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -16,7 +21,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Article>>{
-    public static final String GUARDIAN_REQUEST_URL = "https://content.guardianapis.com/search?show-tags=contributor&q=belarus&api-key=b485c565-8eee-4af6-a97c-562eb03e280b";
+    public static final String GUARDIAN_REQUEST_URL = "https://content.guardianapis.com/search";
     private static final int LOADER_ID = 1;
     private NewsAdapter newsAdapter;
     private TextView emptyView;
@@ -61,11 +66,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(openArticle);
             }
         });
-
-    }
+        }
     @Override
     public Loader<ArrayList<Article>> onCreateLoader (int i, Bundle bundle){
-      return new NewsLoader(this, GUARDIAN_REQUEST_URL);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        //Retrieve a String value from the preferences
+        String sectionSet = sharedPreferences.getString(getString(R.string.settings_section_key), getString(R.string.settings_section_default));
+        //Retrieve  a String value from preferences
+        String orderBy = sharedPreferences.getString(getString(R.string.settings_order_by_key), getString(R.string.settings_order_by_default));
+        //Break apart the URI string that was passed into URI parameter
+        Uri baseUri =Uri.parse(GUARDIAN_REQUEST_URL);
+        //Prepare baseUri that we built for adding query params
+        Uri.Builder builder = baseUri.buildUpon();
+        //Add query params and their values
+        builder.appendQueryParameter("q", "Belarus");
+        builder.appendQueryParameter("section", sectionSet);
+        builder.appendQueryParameter("show_tags", "contributor");
+        builder.appendQueryParameter("order-by", orderBy);
+        builder.appendQueryParameter("api-key","b485c565-8eee-4af6-a97c-562eb03e280b" );
+        Log.v("MainActivity", "uri: " + builder.toString());
+      return new NewsLoader(this, builder.toString());
     }
     @Override
     public void onLoadFinished (Loader<ArrayList<Article>> loader, ArrayList<Article> news) {
@@ -84,4 +104,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoaderReset(Loader<ArrayList<Article>>loader){
         newsAdapter.clear();
         }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.settings_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_settings){
+            Intent settingsIntent = new Intent (this, SettingsActivity.class);
+            startActivity(settingsIntent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
