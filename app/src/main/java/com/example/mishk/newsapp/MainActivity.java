@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //Add query params and their values
         builder.appendQueryParameter("q", "Belarus");
         builder.appendQueryParameter("section", sectionSet);
-        builder.appendQueryParameter("show_tags", "contributor");
+        builder.appendQueryParameter("show-tags", "contributor");
         builder.appendQueryParameter("order-by", orderBy);
         builder.appendQueryParameter("api-key","b485c565-8eee-4af6-a97c-562eb03e280b" );
         Log.v("MainActivity", "uri: " + builder.toString());

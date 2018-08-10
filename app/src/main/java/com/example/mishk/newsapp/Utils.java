@@ -111,8 +111,8 @@ public final class Utils {
                 String date = article.getString("webPublicationDate") ;
                 //Extract the name of the author of the article
                 JSONArray tags = article.getJSONArray("tags");
-                String author ="";
-                if(tags.length()>0){
+                String author = null;
+                if(tags.length()>=1){
                     JSONObject tag = tags.getJSONObject(0);
                     author= "By: "+ tag.optString("webTitle");
                 }
